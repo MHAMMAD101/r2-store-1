@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -14,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ===== تحديد مسار الملفات الثابتة (يعمل على Vercel ومحلياً) =====
+// ===== تحديد مسار الملفات الثابتة =====
 const basePath = process.env.VERCEL 
   ? '/var/task/frontend' 
   : path.join(__dirname, '../frontend');
@@ -438,35 +437,41 @@ function generateStorePage(store, products) {
   `;
 }
 
-// ===== لوحة تحكم المتجر =====
-app.get('/admin', (req, res) => {
-  if (!req.subdomain) {
-    return res.redirect('/');
-  }
-  res.sendFile(path.join(basePath, 'admin.html'));
-});
-
 // ===== صفحات أخرى =====
 app.get('/shop', (req, res) => {
   res.sendFile(path.join(basePath, 'shop.html'));
 });
+
 app.get('/cart', (req, res) => {
   res.sendFile(path.join(basePath, 'cart.html'));
 });
+
 app.get('/checkout', (req, res) => {
   res.sendFile(path.join(basePath, 'checkout.html'));
 });
+
 app.get('/product', (req, res) => {
   res.sendFile(path.join(basePath, 'product.html'));
 });
+
 app.get('/profile', (req, res) => {
   res.sendFile(path.join(basePath, 'profile.html'));
 });
+
 app.get('/about', (req, res) => {
   res.sendFile(path.join(basePath, 'about.html'));
 });
+
 app.get('/contact', (req, res) => {
   res.sendFile(path.join(basePath, 'contact.html'));
+});
+
+// ===== لوحة تحكم المتجر =====
+app.get('/admin', (req, res) => {
+  if (!req.subdomain) {
+    return res.sendFile(path.join(basePath, 'admin.html'));
+  }
+  res.sendFile(path.join(basePath, 'admin.html'));
 });
 
 // ===== API: تسجيل دخول صاحب المتجر =====
