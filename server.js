@@ -550,3 +550,5 @@ if (require.main === module) {
 }
 
 module.exports = app;
+
+Title: Fix server.js for Vercel deployment
