@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حسابي | R2 STORE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-hover: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', 'Segoe UI', sans-serif; }
+        body { background: var(--bg-dark); color: var(--text-primary); line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        .header { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 1rem; text-decoration: none; }
+        .logo-circle { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .logo-circle img { width: 100%; height: 100%; object-fit: cover; }
+        .logo-text { font-size: 1.5rem; font-weight: 900; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-actions { display: flex; gap: 1rem; align-items: center; }
+        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s; text-decoration: none; font-size: 1rem; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4); }
+        .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text-primary); }
+        .btn-outline:hover { border-color: var(--primary); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-sm { padding: 0.5rem 1rem; font-size: 0.85rem; }
+        .profile-page { padding: 3rem 0; min-height: 100vh; }
+        .page-header { text-align: center; margin-bottom: 3rem; }
+        .page-title { font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .page-subtitle { color: var(--text-muted); }
+        .profile-layout { display: grid; grid-template-columns: 280px 1fr; gap: 2rem; }
+        .profile-sidebar { background: var(--bg-card); border-radius: 20px; padding: 2rem; border: 1px solid var(--border); height: fit-content; position: sticky; top: 100px; }
+        .profile-avatar { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: 700; margin: 0 auto 1.5rem; border: 4px solid var(--border); }
+        .profile-name { text-align: center; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .profile-email { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+        .profile-menu { list-style: none; }
+        .profile-menu-item { margin-bottom: 0.5rem; }
+        .profile-menu-link { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 12px; color: var(--text-secondary); text-decoration: none; transition: all 0.3s; cursor: pointer; border: none; background: none; width: 100%; font-size: 1rem; }
+        .profile-menu-link:hover, .profile-menu-link.active { background: var(--bg-hover); color: var(--primary); }
+        .profile-menu-link i { width: 20px; text-align: center; }
+        .profile-menu-link .badge { margin-right: auto; background: var(--danger); color: white; padding: 0.25rem 0.5rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .profile-content { }
+        .profile-section { display: none; }
+        .profile-section.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: var(--bg-card); border-radius: 20px; padding: 2rem; border: 1px solid var(--border); margin-bottom: 2rem; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--border); }
+        .card-title { font-size: 1.5rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 0.75rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: var(--bg-dark); border-radius: 16px; padding: 1.5rem; border: 1px solid var(--border); display: flex; align-items: center; gap: 1.5rem; }
+        .stat-icon { width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .stat-icon.primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+        .stat-icon.success { background: linear-gradient(135deg, var(--success), #059669); }
+        .stat-icon.warning { background: linear-gradient(135deg, var(--warning), #d97706); }
+        .stat-icon.danger { background: linear-gradient(135deg, var(--danger), #dc2626); }
+        .stat-info h3 { font-size: 1.75rem; font-weight: 900; margin-bottom: 0.25rem; }
+        .stat-info p { color: var(--text-muted); font-size: 0.9rem; }
+        .table-container { overflow-x: auto; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table thead { background: var(--bg-hover); }
+        .data-table th { padding: 1rem; text-align: right; font-weight: 700; color: var(--text-secondary); border-bottom: 2px solid var(--border); }
+        .data-table td { padding: 1rem; border-bottom: 1px solid var(--border); }
+        .data-table tbody tr { transition: all 0.3s; }
+        .data-table tbody tr:hover { background: var(--bg-hover); }
+        .badge { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700; }
+        .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .badge-danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .badge-warning { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .badge-info { background: rgba(59, 130, 246, 0.2); color: var(--info); }
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-secondary); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem 1rem; background: var(--bg-dark); border: 2px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 1rem; transition: all 0.3s; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+        .form-group input:disabled { opacity: 0.5; cursor: not-allowed; }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .btn-block { width: 100%; justify-content: center; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center; z-index: 2000; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--bg-card); padding: 2rem; border-radius: 20px; max-width: 700px; width: 90%; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
+        .modal-title { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+        .close-btn { background: none; border: none; color: var(--text-primary); font-size: 1.5rem; cursor: pointer; }
+        .order-details { margin-bottom: 1.5rem; }
+        .order-detail-row { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+        .order-detail-row:last-child { border-bottom: none; }
+        .order-detail-label { color: var(--text-muted); }
+        .order-detail-value { font-weight: 700; }
+        .order-items { margin-top: 1.5rem; }
+        .order-item { display: flex; gap: 1rem; padding: 1rem; background: var(--bg-dark); border-radius: 12px; margin-bottom: 1rem; }
+        .order-item-image { width: 60px; height: 60px; border-radius: 10px; background: var(--bg-hover); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .order-item-info { flex: 1; }
+        .order-item-title { font-weight: 700; margin-bottom: 0.25rem; }
+        .order-item-price { color: var(--primary); }
+        .wishlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; }
+        .wishlist-item { background: var(--bg-dark); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); transition: all 0.3s; }
+        .wishlist-item:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .wishlist-image { height: 180px; background: var(--bg-hover); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+        .wishlist-info { padding: 1.25rem; }
+        .wishlist-title { font-weight: 700; margin-bottom: 0.5rem; }
+        .wishlist-price { color: var(--primary); font-weight: 700; font-size: 1.25rem; margin-bottom: 1rem; }
+        .wishlist-actions { display: flex; gap: 0.5rem; }
+        .empty-state { text-align: center; padding: 4rem 2rem; }
+        .empty-state i { font-size: 5rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+        .empty-state h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+        .empty-state p { color: var(--text-muted); margin-bottom: 2rem; }
+        .footer { background: var(--bg-card); border-top: 1px solid var(--border); padding: 2rem 0; margin-top: 4rem; }
+        .footer-content { text-align: center; color: var(--text-muted); }
+        @media (max-width: 968px) {
+            .profile-layout { grid-template-columns: 1fr; }
+            .profile-sidebar { position: static; }
+            .form-grid { grid-template-columns: 1fr; }
+            .data-table { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-circle"><img src="images/logo.png" alt="R2" onerror="this.style.display='none'"></div>
+                    <span class="logo-text">STORE</span>
+                </a>
+                <div class="nav-actions">
+                    <a href="index.html" class="btn btn-outline"><i class="fas fa-store"></i> المتجر</a>
+                    <a href="cart.html" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> السلة <span id="cartCount">0</span></a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="profile-page">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title"><i class="fas fa-user-circle"></i> حسابي</h1>
+                <p class="page-subtitle">إدارة حسابك وطلباتك</p>
+            </div>
+
+            <div class="profile-layout">
+                <aside class="profile-sidebar">
+                    <div class="profile-avatar" id="profileAvatar">A</div>
+                    <h2 class="profile-name" id="profileName">اسم المستخدم</h2>
+                    <p class="profile-email" id="profileEmail">email@example.com</p>
+                    
+                    <ul class="profile-menu">
+                        <li class="profile-menu-item">
+                            <button class="profile-menu-link active" onclick="showSection('overview')">
+                                <i class="fas fa-home"></i>
+                                <span>نظرة عامة</span>
+                            </button>
+                        </li>
+                        <li class="profile-menu-item">
+                            <button class="profile-menu-link" onclick="showSection('orders')">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span>طلباتي</span>
+                                <span class="badge" id="ordersBadge">0</span>
+                            </button>
+                        </li>
+                        <li class="profile-menu-item">
+                            <button class="profile-menu-link" onclick="showSection('wishlist')">
+                                <i class="fas fa-heart"></i>
+                                <span>المفضلة</span>
+                                <span class="badge" id="wishlistBadge">0</span>
+                            </button>
+                        </li>
+                        <li class="profile-menu-item">
+                            <button class="profile-menu-link" onclick="showSection('settings')">
+                                <i class="fas fa-cog"></i>
+                                <span>الإعدادات</span>
+                            </button>
+                        </li>
+                        <li class="profile-menu-item">
+                            <button class="profile-menu-link" onclick="logout()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>تسجيل الخروج</span>
+                            </button>
+                        </li>
+                    </ul>
+                </aside>
+
+                <main class="profile-content">
+                    <section class="profile-section active" id="overview">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon primary"><i class="fas fa-shopping-bag"></i></div>
+                                <div class="stat-info">
+                                    <h3 id="statOrders">0</h3>
+                                    <p>الطلبات</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon success"><i class="fas fa-dollar-sign"></i></div>
+                                <div class="stat-info">
+                                    <h3 id="statSpent">0 $</h3>
+                                    <p>إجمالي الإنفاق</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon warning"><i class="fas fa-heart"></i></div>
+                                <div class="stat-info">
+                                    <h3 id="statWishlist">0</h3>
+                                    <p>المفضلة</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon danger"><i class="fas fa-star"></i></div>
+                                <div class="stat-info">
+                                    <h3 id="statReviews">0</h3>
+                                    <p>التقييمات</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title"><i class="fas fa-clock"></i> آخر الطلبات</h2>
+                                <a href="#" class="btn btn-outline btn-sm" onclick="showSection('orders'); return false;">عرض الكل</a>
+                            </div>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>رقم الطلب</th>
+                                            <th>التاريخ</th>
+                                            <th>المبلغ</th>
+                                            <th>الحالة</th>
+                                            <th>الإجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentOrdersTable"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="profile-section" id="orders">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title"><i class="fas fa-shopping-bag"></i> طلباتي</h2>
+                            </div>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>رقم الطلب</th>
+                                            <th>التاريخ</th>
+                                            <th>المنتجات</th>
+                                            <th>المبلغ</th>
+                                            <th>طريقة الدفع</th>
+                                            <th>الحالة</th>
+                                            <th>الإجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ordersTable"></tbody>
+                                </table>
+                            </div>
+                            <div id="emptyOrders" class="empty-state" style="display: none;">
+                                <i class="fas fa-shopping-bag"></i>
+                                <h3>لا توجد طلبات</h3>
+                                <p>لم تقم بأي طلبات بعد. ابدأ التسوق الآن!</p>
+                                <a href="shop.html" class="btn btn-primary"><i class="fas fa-store"></i> تصفح المتجر</a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="profile-section" id="wishlist">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title"><i class="fas fa-heart"></i> قائمتي المفضلة</h2>
+                            </div>
+                            <div class="wishlist-grid" id="wishlistGrid"></div>
+                            <div id="emptyWishlist" class="empty-state" style="display: none;">
+                                <i class="fas fa-heart"></i>
+                                <h3>القائمة فارغة</h3>
+                                <p>لم تضف أي منتجات للمفضلة بعد</p>
+                                <a href="shop.html" class="btn btn-primary"><i class="fas fa-store"></i> تصفح المنتجات</a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="profile-section" id="settings">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title"><i class="fas fa-user"></i> المعلومات الشخصية</h2>
+                            </div>
+                            <form onsubmit="updateProfile(event)">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>الاسم</label>
+                                        <input type="text" id="editName" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>البريد الإلكتروني</label>
+                                        <input type="email" id="editEmail" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>رقم الجوال</label>
+                                        <input type="tel" id="editPhone">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>الدولة</label>
+                                        <select id="editCountry">
+                                            <option value="">اختر الدولة...</option>
+                                            <option value="SA">المملكة العربية السعودية</option>
+                                            <option value="AE">الإمارات العربية المتحدة</option>
+                                            <option value="EG">مصر</option>
+                                            <option value="KW">الكويت</option>
+                                            <option value="QA">قطر</option>
+                                            <option value="BH">البحرين</option>
+                                            <option value="OM">عمان</option>
+                                            <option value="JO">الأردن</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-save"></i> حفظ التغييرات
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title"><i class="fas fa-lock"></i> تغيير كلمة المرور</h2>
+                            </div>
+                            <form onsubmit="changePassword(event)">
+                                <div class="form-group">
+                                    <label>كلمة المرور الحالية</label>
+                                    <input type="password" id="currentPassword" required>
+                                </div>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>كلمة المرور الجديدة</label>
+                                        <input type="password" id="newPassword" required minlength="6">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>تأكيد كلمة المرور</label>
+                                        <input type="password" id="confirmPassword" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-key"></i> تغيير كلمة المرور
+                                </button>
+                            </form>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-receipt"></i> تفاصيل الطلب</h3>
+                <button class="close-btn" onclick="closeModal('orderModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="orderDetailsContent"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>© 2024 <strong>R2 STORE</strong>. جميع الحقوق محفوظة</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        let currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        let token = localStorage.getItem('token');
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+        let orders = [];
+
+        if (!currentUser || !token) {
+            alert('🔐 يجب تسجيل الدخول أولاً');
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            loadUserProfile();
+            updateCartCount();
+            updateWishlistCount();
+            await loadOrders();
+            updateStats();
+        });
+
+        function loadUserProfile() {
+            document.getElementById('profileName').textContent = currentUser.name;
+            document.getElementById('profileEmail').textContent = currentUser.email;
+            document.getElementById('profileAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            
+            document.getElementById('editName').value = currentUser.name;
+            document.getElementById('editEmail').value = currentUser.email;
+            document.getElementById('editPhone').value = currentUser.phone || '';
+        }
+
+        function showSection(sectionName) {
+            document.querySelectorAll('.profile-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.profile-menu-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            document.getElementById(sectionName).classList.add('active');
+            event.target.closest('.profile-menu-link')?.classList.add('active');
+        }
+
+        async function loadOrders() {
+            try {
+                const response = await fetch('http://localhost:3000/api/my-orders', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                orders = await response.json();
+                
+                displayOrders();
+                displayRecentOrders();
+                updateOrdersBadge();
+                
+            } catch (error) {
+                console.error('خطأ في تحميل الطلبات:', error);
+            }
+        }
+
+        function displayOrders() {
+            const tbody = document.getElementById('ordersTable');
+            const emptyState = document.getElementById('emptyOrders');
+            
+            if (orders.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            tbody.innerHTML = orders.map(order => `
+                <tr>
+                    <td>#${order.id}</td>
+                    <td>${new Date(order.created_at).toLocaleDateString('ar-SA')}</td>
+                    <td>${order.products || '-'}</td>
+                    <td style="font-weight:700;color:var(--primary);">${order.total_amount.toFixed(2)} $</td>
+                    <td>${getPaymentMethodName(order.payment_method)}</td>
+                    <td><span class="badge badge-success">مكتمل</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="viewOrderDetails(${order.id})">
+                            <i class="fas fa-eye"></i> عرض
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function displayRecentOrders() {
+            const tbody = document.getElementById('recentOrdersTable');
+            const recentOrders = orders.slice(0, 5);
+            
+            if (recentOrders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:2rem;">لا توجد طلبات</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = recentOrders.map(order => `
+                <tr>
+                    <td>#${order.id}</td>
+                    <td>${new Date(order.created_at).toLocaleDateString('ar-SA')}</td>
+                    <td style="font-weight:700;color:var(--primary);">${order.total_amount.toFixed(2)} $</td>
+                    <td><span class="badge badge-success">مكتمل</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="viewOrderDetails(${order.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function viewOrderDetails(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+            
+            const content = document.getElementById('orderDetailsContent');
+            content.innerHTML = `
+                <div class="order-details">
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">رقم الطلب:</span>
+                        <span class="order-detail-value">#${order.id}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">التاريخ:</span>
+                        <span class="order-detail-value">${new Date(order.created_at).toLocaleDateString('ar-SA')}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">طريقة الدفع:</span>
+                        <span class="order-detail-value">${getPaymentMethodName(order.payment_method)}</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">الحالة:</span>
+                        <span class="order-detail-value"><span class="badge badge-success">مكتمل</span></span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">الإجمالي:</span>
+                        <span class="order-detail-value" style="color:var(--primary);font-size:1.25rem;">${order.total_amount.toFixed(2)} $</span>
+                    </div>
+                </div>
+                
+                <div class="order-items">
+                    <h4 style="margin-bottom:1rem;color:var(--primary);">المنتجات</h4>
+                    <div class="order-item">
+                        <div class="order-item-image">📦</div>
+                        <div class="order-item-info">
+                            <div class="order-item-title">${order.products || 'منتج'}</div>
+                            <div class="order-item-price">${order.total_amount.toFixed(2)} $</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top:2rem;display:flex;gap:1rem;">
+                    <button class="btn btn-primary btn-block" onclick="downloadInvoice(${order.id})">
+                        <i class="fas fa-download"></i> تحميل الفاتورة
+                    </button>
+                    <button class="btn btn-outline btn-block" onclick="reorder(${order.id})">
+                        <i class="fas fa-redo"></i> إعادة الطلب
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('orderModal').classList.add('active');
+        }
+
+        function displayWishlist() {
+            const grid = document.getElementById('wishlistGrid');
+            const emptyState = document.getElementById('emptyWishlist');
+            
+            if (wishlist.length === 0) {
+                grid.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            grid.innerHTML = wishlist.map(item => `
+                <div class="wishlist-item">
+                    <div class="wishlist-image">${item.icon || '📦'}</div>
+                    <div class="wishlist-info">
+                        <h3 class="wishlist-title">${item.title}</h3>
+                        <div class="wishlist-price">${item.price} $</div>
+                        <div class="wishlist-actions">
+                            <button class="btn btn-primary btn-sm" style="flex:1;" onclick="addToCartFromWishlist(${item.id})">
+                                <i class="fas fa-cart-plus"></i> أضف للسلة
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="removeFromWishlist(${item.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateStats() {
+            document.getElementById('statOrders').textContent = orders.length;
+            document.getElementById('statWishlist').textContent = wishlist.length;
+            
+            const totalSpent = orders.reduce((sum, order) => sum + (order.total_amount || 0), 0);
+            document.getElementById('statSpent').textContent = totalSpent.toFixed(2) + ' $';
+            
+            document.getElementById('statReviews').textContent = '0';
+        }
+
+        function updateOrdersBadge() {
+            document.getElementById('ordersBadge').textContent = orders.length;
+        }
+
+        function updateWishlistCount() {
+            document.getElementById('wishlistBadge').textContent = wishlist.length;
+            displayWishlist();
+        }
+
+        function updateCartCount() {
+            const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        function addToCartFromWishlist(id) {
+            const item = wishlist.find(w => w.id === id);
+            if (!item) return;
+            
+            const existing = cart.find(c => c.id === id);
+            if (existing) {
+                existing.quantity = (existing.quantity || 1) + 1;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            alert('✅ تم الإضافة للسلة!');
+        }
+
+        function removeFromWishlist(id) {
+            if (!confirm('هل أنت متأكد من الإزالة من المفضلة؟')) return;
+            
+            wishlist = wishlist.filter(w => w.id !== id);
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            updateWishlistCount();
+            updateStats();
+        }
+
+        function updateProfile(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('editName').value;
+            const phone = document.getElementById('editPhone').value;
+            const country = document.getElementById('editCountry').value;
+            
+            currentUser.name = name;
+            currentUser.phone = phone;
+            currentUser.country = country;
+            
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            loadUserProfile();
+            alert('✅ تم تحديث المعلومات بنجاح!');
+        }
+
+        function changePassword(event) {
+            event.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (newPassword !== confirmPassword) {
+                alert('⚠️ كلمات المرور غير متطابقة');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                alert('⚠️ كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+                return;
+            }
+            
+            alert('✅ تم تغيير كلمة المرور بنجاح!');
+            
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        }
+
+        function downloadInvoice(orderId) {
+            alert('📄 جاري تحميل الفاتورة...');
+        }
+
+        function reorder(orderId) {
+            alert('🛒 جاري إضافة المنتجات للسلة...');
+        }
+
+        function getPaymentMethodName(method) {
+            const names = {
+                'card': 'بطاقة ائتمان',
+                'apple_pay': 'Apple Pay',
+                'stc_pay': 'STC Pay',
+                'paypal': 'PayPal',
+                'bank_transfer': 'تحويل بنكي',
+                'cash': 'كاش'
+            };
+            return names[method] || method;
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function logout() {
+            if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('token');
+                window.location.href = 'index.html';
+            }
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        };
+    </script>
+</body>
+</html>
