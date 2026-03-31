@@ -343,7 +343,7 @@ function generateStorePage(store, products) {
   <header class="header">
     <div class="header-container">
       <div class="logo-section">
-        ${store.logo_url ? `<img src="${store.logo_url}" alt="Logo" class="logo">` : '<div class="logo" style="background:' + primaryColor + ';display:flex;align-items:center;justify-content:center;font-weight:bold;">' + store.store_name.charAt(0) + '</div>'}
+        ${store.logo_url ? '<img src="' + store.logo_url + '" alt="Logo" class="logo">' : '<div class="logo" style="background:' + primaryColor + ';display:flex;align-items:center;justify-content:center;font-weight:bold;">' + store.store_name.charAt(0) + '</div>'}
         <div class="store-title">${store.store_name}</div>
       </div>
       <div class="nav-buttons">
@@ -360,7 +360,7 @@ function generateStorePage(store, products) {
 
   <section class="hero">
     <div class="hero-content">
-      ${store.logo_url ? `<img src="${store.logo_url}" alt="Logo" class="hero-logo">` : ''}
+      ${store.logo_url ? '<img src="' + store.logo_url + '" alt="Logo" class="hero-logo">' : ''}
       <h1>${store.store_name}</h1>
       <p>${store.footer_text || 'أفضل المنتجات الرقمية باحترافية وجودة عالية'}</p>
       
@@ -416,7 +416,7 @@ function generateStorePage(store, products) {
   </div>
 
   <footer class="footer">
-    <p>${store.footer_text || \`© 2025 \${store.store_name} - جميع الحقوق محفوظة\`}</p>
+    <p>${store.footer_text || '© 2025 ' + store.store_name + ' - جميع الحقوق محفوظة'}</p>
   </footer>
 
   <script>
@@ -550,8 +550,7 @@ app.post('/api/products', (req, res) => {
       }
       
       db.run(
-        \`INSERT INTO products (store_id, title, description, price, image_url, stock)
-         VALUES (?, ?, ?, ?, ?, ?)\`,
+        'INSERT INTO products (store_id, title, description, price, image_url, stock) VALUES (?, ?, ?, ?, ?, ?)',
         [session.store_id, title, description, price, image_url, stock || 999],
         function(err) {
           if (err) {
@@ -597,14 +596,14 @@ module.exports = app;
 // ===== Run server locally only (NOT on Vercel) =====
 if (require.main === module && !process.env.VERCEL) {
   app.listen(PORT, () => {
-    console.log(\`
+    console.log(`
 ╔══════════════════════════════════════╗
 ║   🌐 R2 Store Server Running         ║
 ╚══════════════════════════════════════╝
 
-📍 Local: http://localhost:\${PORT}
-🏪 Example: http://test.localhost:\${PORT}
-🔧 Admin: http://test.localhost:\${PORT}/admin
-\`);
+📍 Local: http://localhost:${PORT}
+🏪 Example: http://test.localhost:${PORT}
+🔧 Admin: http://test.localhost:${PORT}/admin
+`);
   });
 }
