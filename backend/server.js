@@ -8,35 +8,65 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static files (CSS, JS, Images)
-app.use('/css', express.static(path.join(__dirname, 'css')));
-app.use('/js', express.static(path.join(__dirname, 'js')));
-app.use('/images', express.static(path.join(__dirname, 'images')));
+// Get the base directory (works on Vercel and locally)
+const basePath = process.env.VERCEL 
+  ? '/var/task/frontend' 
+  : path.join(__dirname, '../frontend');
+
+// Serve static files
+app.use(express.static(basePath));
 
 // Test routes
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(basePath, 'index.html'));
 });
 
-app.get('/api/test', (req, res) => {
-  res.json({ success: true, message: 'API working!' });
-});
-
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'healthy', timestamp: new Date().toISOString() });
-});
-
-// Serve HTML pages
 app.get('/shop', (req, res) => {
-  res.sendFile(path.join(__dirname, 'shop.html'));
+  res.sendFile(path.join(basePath, 'shop.html'));
 });
 
 app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
+  res.sendFile(path.join(basePath, 'admin.html'));
 });
 
 app.get('/cart', (req, res) => {
-  res.sendFile(path.join(__dirname, 'cart.html'));
+  res.sendFile(path.join(basePath, 'cart.html'));
+});
+
+app.get('/checkout', (req, res) => {
+  res.sendFile(path.join(basePath, 'checkout.html'));
+});
+
+app.get('/product', (req, res) => {
+  res.sendFile(path.join(basePath, 'product.html'));
+});
+
+app.get('/profile', (req, res) => {
+  res.sendFile(path.join(basePath, 'profile.html'));
+});
+
+app.get('/about', (req, res) => {
+  res.sendFile(path.join(basePath, 'about.html'));
+});
+
+app.get('/contact', (req, res) => {
+  res.sendFile(path.join(basePath, 'contact.html'));
+});
+
+// API routes
+app.get('/api/test', (req, res) => {
+  res.json({ 
+    success: true, 
+    message: 'API working!',
+    basePath: basePath
+  });
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'healthy', 
+    timestamp: new Date().toISOString() 
+  });
 });
 
 // Error handling
