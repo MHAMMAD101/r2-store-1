@@ -534,14 +534,19 @@ app.post('/api/products', (req, res) => {
   );
 });
 
-// تشغيل السيرفر
-app.listen(PORT, () => {
-  console.log(`\n╔══════════════════════════════════════╗`);
-  console.log(`║   🌐 R2 Store Server Running         ║`);
-  console.log(`╚══════════════════════════════════════╝\n`);
-  console.log(`📍 Local: http://localhost:${PORT}`);
-  console.log(`🏪 Example: http://mhammad.localhost:${PORT}`);
-  console.log(`🔧 Admin: http://mhammad.localhost:${PORT}/admin\n`);
-});
+// ===== تصدير التطبيق لـ Vercel =====
+module.exports = app;
+
+// ===== تشغيل السيرفر محلياً فقط (مش على Vercel) =====
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`\n╔══════════════════════════════════════╗`);
+    console.log(`║   🌐 R2 Store Server Running         ║`);
+    console.log(`╚══════════════════════════════════════╝\n`);
+    console.log(`📍 Local: http://localhost:${PORT}`);
+    console.log(`🏪 Example: http://mhammad.localhost:${PORT}`);
+    console.log(`🔧 Admin: http://mhammad.localhost:${PORT}/admin\n`);
+  });
+}
 
 module.exports = app;
