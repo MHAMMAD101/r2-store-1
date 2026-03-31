@@ -8,44 +8,41 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static files from frontend folder
-app.use(express.static(path.join(__dirname, '../frontend')));
+// Serve static files (CSS, JS, Images)
+app.use('/css', express.static(path.join(__dirname, 'css')));
+app.use('/js', express.static(path.join(__dirname, 'js')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // Test routes
 app.get('/', (req, res) => {
-  res.json({ 
-    status: 'OK', 
-    message: '🚀 Server is running on Vercel!',
-    timestamp: new Date().toISOString()
-  });
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.get('/api/test', (req, res) => {
-  res.json({ 
-    success: true, 
-    message: 'API is working perfectly!' 
-  });
+  res.json({ success: true, message: 'API working!' });
 });
 
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'healthy',
-    timestamp: new Date().toISOString()
-  });
+  res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+});
+
+// Serve HTML pages
+app.get('/shop', (req, res) => {
+  res.sendFile(path.join(__dirname, 'shop.html'));
+});
+
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+app.get('/cart', (req, res) => {
+  res.sendFile(path.join(__dirname, 'cart.html'));
 });
 
 // Error handling
 app.use((err, req, res, next) => {
   console.error('Error:', err);
   res.status(500).json({ error: 'Internal Server Error' });
-});
-
-// Export for Vercel Serverless
-module.exports = app;
-
-// Serve frontend for all other routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
 // Export for Vercel
