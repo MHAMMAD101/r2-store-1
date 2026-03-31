@@ -13,20 +13,23 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ===== تحديد المسار الصحيح =====
+// ===== المسار الصحيح - الملفات في نفس المجلد! =====
 const basePath = process.env.VERCEL 
-  ? '/var/task/frontend' 
-  : path.join(__dirname, '../frontend');
+  ? '/var/task'  // على Vercel، الملفات في root
+  : __dirname;   // محلياً، في نفس مجلد server.js
 
-// ===== خدمة الملفات الثابتة (مهم جداً!) =====
+// ===== خدمة الملفات الثابتة =====
 app.use(express.static(basePath));
+app.use('/css', express.static(path.join(basePath, 'css')));
+app.use('/js', express.static(path.join(basePath, 'js')));
+app.use('/images', express.static(path.join(basePath, 'images')));
 
-// الصفحة الرئيسية
+// ===== الصفحة الرئيسية =====
 app.get('/', (req, res) => {
   res.sendFile(path.join(basePath, 'index.html'));
 });
 
-// الصفحات الأخرى
+// ===== الصفحات الأخرى =====
 app.get('/shop', (req, res) => {
   res.sendFile(path.join(basePath, 'shop.html'));
 });
@@ -41,6 +44,22 @@ app.get('/cart', (req, res) => {
 
 app.get('/checkout', (req, res) => {
   res.sendFile(path.join(basePath, 'checkout.html'));
+});
+
+app.get('/product', (req, res) => {
+  res.sendFile(path.join(basePath, 'product.html'));
+});
+
+app.get('/profile', (req, res) => {
+  res.sendFile(path.join(basePath, 'profile.html'));
+});
+
+app.get('/about', (req, res) => {
+  res.sendFile(path.join(basePath, 'about.html'));
+});
+
+app.get('/contact', (req, res) => {
+  res.sendFile(path.join(basePath, 'contact.html'));
 });
 
 // ===== API Test =====
