@@ -42,3 +42,11 @@ app.use((err, req, res, next) => {
 
 // Export for Vercel Serverless
 module.exports = app;
+
+// Serve frontend for all other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+});
+
+// Export for Vercel
+module.exports = app;
